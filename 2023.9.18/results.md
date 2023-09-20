@@ -12,11 +12,11 @@
 
 那么 
 
-$ans=k^\frac{n}{k} $
+$ans=k^\frac{n}{k}$
 
 求导为 
 
-$ans'=n{k}^{\frac{n}{k}-2}\left(1-\ln\left(k\right)\right)$
+$ans'=n{k}^{\frac{n}{k}-2}(1-\ln(k))$
 
 在k取e时ans取最大值，又由于ans为整数，所以k取2或3最优。
 
