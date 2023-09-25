@@ -1,4 +1,8 @@
 def d_to_b(f):
+    judge = False
+    if f[0] == '-':
+        f = f.replace('-', '')
+        judge = True
     tmp = f.split('.')
     l_d = -1
     r_d = -1
@@ -23,7 +27,9 @@ def d_to_b(f):
     if l_b == "":
         l_b = "0"
     if r_b == "":
+        if judge: return "-" + l_b
         return l_b
+    if judge: return "-" + l_b + '.' + r_b
     return l_b + '.' + r_b
 
 
