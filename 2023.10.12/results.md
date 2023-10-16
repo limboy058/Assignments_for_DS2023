@@ -48,3 +48,86 @@
 
 
 
+## 6.5
+
+在6.4基础上，做一定修改，进入二级网页爬取详细信息。
+
+运行方式请在方案下`scrapy crawl ddw`
+
+ 由于数据量较大，可能需要等待5分钟左右才会运行完毕。
+
+比如spider: ddw.py,
+
+实现逻辑为`parse`爬取全部的二级网页的url，`getnext`方法处理网页的xml信息并返回
+
+![image-20231016180557755](results.assets/image-20231016180557755.png)
+
+此外，由于当当网存在一定的反爬机制，还需要登陆账号
+
+所以在setting.py中设置了较慢的爬取速度，
+
+在middlewares.py中设置了定义的cookie（包含我的账号信息）
+
+![image-20231016180746673](results.assets/image-20231016180746673.png)
+
+
+
+这是爬取的books.csv导入excel的表格，包含url，书名，价格，简介，作者，出版社，日期 等
+
+![image-20231016180508764](results.assets/image-20231016180508764.png)
+
+
+
+## 7.1
+
+我用的是SSMS
+
+<img src="results.assets/image-20231016181309899.png" alt="image-20231016181309899" style="zoom: 50%;" />
+
+
+
+## 7.2
+
+<img src="results.assets/image-20231016181557800.png" alt="image-20231016181557800" style="zoom:80%;" />
+
+
+
+## 7.3
+
+<img src="results.assets/image-20231016211115402.png" alt="image-20231016211115402" style="zoom:67%;" />
+
+
+
+## 7.4,5
+
+<img src="results.assets/image-20231016211528217.png" alt="image-20231016211528217" style="zoom: 67%;" />
+
+
+
+## 7.6
+
+<img src="results.assets/image-20231016211751883.png" alt="image-20231016211751883" style="zoom:67%;" />
+
+
+
+## 7.8
+
+<img src="results.assets/image-20231016213959744.png" alt="image-20231016213959744" style="zoom:67%;" />
+
+<img src="results.assets/image-20231016215245386.png" alt="image-20231016215245386" style="zoom:67%;" />
+
+
+
+## 7.9
+
+`select * from person where id in (select userid from teamscore where teamid = (select id from team where teamname='ECNU' ))`
+
+![image-20231016215916997](results.assets/image-20231016215916997.png)
+
+
+
+## 7.10
+
+`select avg(isnull(score,0)) from teamscore where teamid = (select id from team where teamname='ECNU' )`
+
+<img src="results.assets/image-20231016220300580.png" alt="image-20231016220300580" style="zoom:67%;" />
