@@ -6,4 +6,4 @@
 
 #### 文件夹内有以题号命名的xx.py文件，以及result.md
 
-#### 欢迎参考
+#### 课程主页[X-lab2017/ds-2023-autumn: Introduction to Data Science and Engineering - 2023 Autumn (github.com)](https://github.com/X-lab2017/ds-2023-autumn)
