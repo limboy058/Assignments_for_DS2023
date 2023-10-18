@@ -22,8 +22,17 @@ def eig_power(A, v0, eps):
     return val, uk
 
 if __name__ == '__main__':
-    A = np.matrix([[6.33333333, 2.5, -5], [2.5, 1., -2], [-5., -2., 4]], dtype='float')
+    A = np.matrix([[6.3333333333333, 2.5, -5], [2.5, 1., -2], [-5., -2., 4]], dtype='float')
+
+
+    B = np.matrix([[6.3333333333333, 2.5, -5], [2.5, 1., -2], [-5., -2., 4]], dtype='float')
+    eigen,feature=np.linalg.eig(B)
+
+
     print("A:\n", A)
+    print("\n使用numpy函数求得的特征值与特征向量:")
+    print(eigen)
+    print(feature)
 
     v1 = np.matrix([[1], [1], [1]], dtype='float')
     v2 = np.matrix([[1], [1], [1]], dtype='float')

@@ -68,4 +68,4 @@
 
 结合4，使用了偏移法来求出非主特征值。
 
-<img src="results.assets/image-20231017220645142.png" alt="image-20231017220645142" style="zoom: 67%;" />
+<img src="results.assets/image-20231018091432093.png" alt="image-20231018091432093" style="zoom:67%;" />
