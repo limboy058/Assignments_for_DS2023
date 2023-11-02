@@ -1,86 +1,99 @@
-import torchvision
 import torch
-from torchvision import datasets, transforms
-from torch.autograd import Variable
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, Dataset
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
-transform = transforms.Compose([transforms.ToTensor(),
-                               transforms.Normalize(mean=[0.5],std=[0.5])])
-data_train = datasets.MNIST(root = "./data/",
-                            transform=transform,
-                            train = True,
-                            download = True)
-data_test = datasets.MNIST(root="./data/",
-                           transform = transform,
-                           train = False)
+# 加载数据集
+data = load_iris()
+X = data.data
+y = data.target
+# 分割
+X_train, X_test, y_train, y_test = train_test_split(X,
+                                                    y,
+                                                    test_size=0.2,
+                                                    random_state=42)
 
-data_loader_train = torch.utils.data.DataLoader(dataset=data_train,
-                                                batch_size = 64,
-                                                shuffle = True)
+# 标准化数据
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
-data_loader_test = torch.utils.data.DataLoader(dataset=data_test,
-                                               batch_size = 64,
-                                               shuffle = True)
+X_train = torch.tensor(X_train, dtype=torch.float32)
+X_test = torch.tensor(X_test, dtype=torch.float32)
+y_train = torch.tensor(y_train, dtype=torch.long)
+y_test = torch.tensor(y_test, dtype=torch.long)
 
-class Model(torch.nn.Module):
-    
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = torch.nn.Sequential(torch.nn.Conv2d(1,64,kernel_size=3,stride=1,padding=1),
-                                         torch.nn.ReLU(),
-                                         torch.nn.Conv2d(64,128,kernel_size=3,stride=1,padding=1),
-                                         torch.nn.ReLU(),
-                                         torch.nn.MaxPool2d(stride=2,kernel_size=2))
-        self.dense = torch.nn.Sequential(torch.nn.Linear(14*14*128,1024),
-                                         torch.nn.ReLU(),
-                                         torch.nn.Dropout(p=0.5),
-                                         torch.nn.Linear(1024, 10))
+# 数据模型
+class IrisDataset(Dataset):
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]
+
+
+# 数据加载器
+batch_size = 32
+train_dataset = IrisDataset(X_train, y_train)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+
+
+# 学习模型
+class IrisClassifier(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(IrisClassifier, self).__init__()  # 此处应该调用super的构造函数
+        self.fc1 = nn.Linear(input_dim, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, output_dim)
+
     def forward(self, x):
-        x = self.conv1(x)
-        x = x.view(-1, 14*14*128)
-        x = self.dense(x)
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
         return x
-    
-
-model = Model()
-print(model)
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(device)
-model.to(device)
-cost = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters())
 
 
-n_epochs=5
-for epoch in range(n_epochs):
+input_dim = X_train.shape[1]
+output_dim = len(data.target_names)
+model = IrisClassifier(input_dim, output_dim)
+
+# 定义损失函数和优化器
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.02)
+
+# 训练模型
+num_epochs = 100
+for epoch in range(num_epochs):
+    model.train()
     running_loss = 0.0
-    running_correct = 0
-    print("Epoch {}/{}".format(epoch, n_epochs))
-    print("-"*10)
-    for data in data_loader_train:
-        X_train, y_train = data
-        X_train, y_train=X_train.to(device),y_train.to(device)
-        X_train, y_train = Variable(X_train), Variable(y_train)
-        outputs = model(X_train)
-        _,pred = torch.max(outputs.data, 1)
-
-
+    for inputs, labels in train_loader:
         optimizer.zero_grad()
-        loss = cost(outputs, y_train)
-        
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
-        running_correct += torch.sum(pred == y_train.data)
-    testing_correct = 0
-    for data in data_loader_test:
-        X_test, y_test = data
-        X_test, y_test = Variable(X_test), Variable(y_test)
-        X_test, y_test=X_test.to(device),y_test.to(device)
-        outputs = model(X_test)
-        _, pred = torch.max(outputs.data, 1)
-        testing_correct += torch.sum(pred == y_test.data)
-    print("Loss is:{:.4f}, Train Accuracy is:{:.4f}%, Test Accuracy is:{:.4f}".format(running_loss/len(data_train),
-                                                                                      100*running_correct/len(data_train),
-                                                                                      100*testing_correct/len(data_test)))
-torch.save(model.state_dict(), "model_parameter.pkl")
+    print(f'Epoch {epoch + 1}, Loss: {running_loss / len(train_loader)}')
+
+print("训练完成")
+
+# 评估模型
+model.eval()
+with torch.no_grad():
+    correct = 0
+    total = 0
+    for inputs, labels in zip(X_test, y_test):
+        outputs = model(inputs)
+        _, predicted = torch.max(outputs, 0)
+        total += 1
+        correct += (predicted == labels).item()
+
+accuracy = 100 * correct / total
+print('\n准确率: %.10f'%(accuracy)+"%")

@@ -59,3 +59,17 @@ rt
 
 
 ## 12.4
+
+![image-20231102225816373](results.assets/image-20231102225816373.png)
+
+
+
+## 12.5
+
+![image-20231102231632206](results.assets/image-20231102231632206.png)
+
+
+
+## 12.7 12.8
+
+![image-20231103001339134](results.assets/image-20231103001339134.png)
