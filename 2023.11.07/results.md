@@ -43,7 +43,9 @@
 
 #### 14.4.2
 
+<img src="results.assets/image-20231108175053569.png" alt="image-20231108175053569" style="zoom:33%;" />
 
+使用keras导入的数据集，已经把单词转数据了，无需调用`Tokenizer`.
 
 
 
@@ -69,3 +71,22 @@
 
 ## 14.4
 
+<img src="results.assets/image-20231108183946014.png" alt="image-20231108183946014" style="zoom:33%;" />
+
+
+
+## 14.8&14.9
+
+<img src="results.assets/image-20231108192118754.png" alt="image-20231108192118754" style="zoom:33%;" />
+
+参考代码，使用了`torch_geometric`中的图神经网络（`GNN`）
+
+
+
+<img src="results.assets/image-20231108193355621.png" alt="image-20231108193355621" style="zoom:33%;" />
+
+我的二维可视化似乎不是特别直观，不过这个人挺直观的，也许有价值参考（我没太看懂）
+
+[GCN、GAT实现Cora数据集节点分类（pytorch-geometric框架）_节点分类问题用的数据集-CSDN博客](https://blog.csdn.net/qq_20805805/article/details/117720945)
+
+<img src="results.assets/image-20231108193533762.png" alt="image-20231108193533762" style="zoom:50%;" />
