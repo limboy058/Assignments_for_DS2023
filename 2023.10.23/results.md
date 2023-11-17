@@ -48,7 +48,7 @@ Evaluate.py测试评估（使用最新的训练结果）
 
 demo.py展示几个预测结果
 
-![屏幕截图 2023-11-15 231211](results.assets/屏幕截图 2023-11-15 231211.png)
+<img src="results.assets/屏幕截图 2023-11-15 231211.png" alt="屏幕截图 2023-11-15 231211" style="zoom:33%;" />
 
 
 
